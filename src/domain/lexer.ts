@@ -1,5 +1,5 @@
-import { TokenType } from "./language-specifics"
-import { SourceCode } from "./source-code"
+import { TokenType } from "./language-specifics.ts"
+import { SourceCode } from "./source-code.ts"
 
 export class Token {
   constructor(public type: TokenType, public value: string) {}
