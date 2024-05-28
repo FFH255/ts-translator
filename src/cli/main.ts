@@ -1,7 +1,8 @@
 import { Lexer } from "../domain/lexer.ts"
 import { SourceCode } from "../domain/source-code.ts"
 
-const input = "= + -"
+const input =
+  "+ - * / 1 = 123 1.2 ав111 Конец Начало Анализ Синтез КонецАнализа : ; :="
 
 const src = new SourceCode(input)
 
