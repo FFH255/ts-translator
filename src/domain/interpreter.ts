@@ -1,6 +1,5 @@
 import {
   BinaryExpression,
-  NodeType,
   NumericExpression,
   Program,
   Statement,
@@ -60,26 +59,20 @@ export class Interpreter {
   private evaluateBinaryExpression(exp: BinaryExpression): RuntimeValue {
     const lhs = this.interpret(exp.left)
     const rhs = this.interpret(exp.right)
-    if (lhs.type === ValueType.Number && rhs.type === ValueType.Number) {
-      return this.evaluateNumericBinaryExpression(
-        lhs as NumberValue,
-        rhs as NumberValue,
-        exp.operator
-      )
+    if (lhs instanceof NumberValue && rhs instanceof NumberValue) {
+      return this.evaluateNumericBinaryExpression(lhs, rhs, exp.operator)
     }
     throw new Error()
   }
 
   interpret(astNode: Statement): RuntimeValue {
-    switch (astNode.kind) {
-      case NodeType.Numeric:
-        return new NumberValue((astNode as NumericExpression).value)
-      case NodeType.BinaryExpression:
-        return this.evaluateBinaryExpression(astNode as BinaryExpression)
-      case NodeType.Programm:
-        return this.evaluateProgram(astNode as Program)
-      default:
-        throw new Error()
+    if (astNode instanceof NumericExpression) {
+      return new NumberValue(astNode.value)
+    } else if (astNode instanceof BinaryExpression) {
+      return this.evaluateBinaryExpression(astNode)
+    } else if (astNode instanceof Program) {
+      return this.evaluateProgram(astNode)
     }
+    throw new Error() // TODO: throw custom error
   }
 }
