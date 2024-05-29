@@ -10,7 +10,7 @@ const enum ValueType {
   Number,
 }
 
-class RuntimeValue {
+export class RuntimeValue {
   constructor(public type: ValueType) {}
 }
 
