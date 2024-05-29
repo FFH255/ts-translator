@@ -17,10 +17,27 @@ export const enum TokenType {
   Colon,
   Semicolon,
   Allocation,
+  EOF,
 }
 
 export class Token {
   constructor(public type: TokenType, public value: string) {}
+}
+
+export class Tokens {
+  constructor(private tokens: Token[]) {}
+
+  notEOF(): boolean {
+    return this.tokens[0]?.type !== TokenType.EOF
+  }
+
+  at(): Token {
+    return this.tokens[0]
+  }
+
+  eat(): Token {
+    return this.tokens.shift() as Token
+  }
 }
 
 export type Range<T> = [T, T]
@@ -100,7 +117,7 @@ export class Lexer {
     return this.keywords[str] !== undefined
   }
 
-  tokenize(src: SourceCode): Token[] {
+  tokenize(src: SourceCode): Tokens {
     const tokens = new Array<Token>()
     while (src.notEOF()) {
       if (this.isSkippable(src.at())) {
@@ -151,6 +168,7 @@ export class Lexer {
         tokens.push(new Token(TokenType.Semicolon, src.eat()))
       }
     }
-    return tokens
+    tokens.push(new Token(TokenType.EOF, ""))
+    return new Tokens(tokens)
   }
 }

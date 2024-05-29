@@ -1,8 +1,8 @@
 import { Lexer } from "../domain/lexer.ts"
+import { Parser } from "../domain/parser.ts"
 import { SourceCode } from "../domain/source-code.ts"
 
-const input =
-  "+ - * / 1 = 123 1.2 ав111 Конец Начало Анализ Синтез КонецАнализа : ; :="
+const input = "аа1"
 
 const src = new SourceCode(input)
 
@@ -10,4 +10,8 @@ const lexer = new Lexer()
 
 const tokens = lexer.tokenize(src)
 
-console.log(tokens)
+const parser = new Parser()
+
+const program = parser.parse(tokens)
+
+console.log(program)
