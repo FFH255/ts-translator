@@ -85,6 +85,7 @@ export class Lexer {
     "9".charCodeAt(0),
   ]
 
+  private readonly logicals = ["&", "|", "!"]
   private readonly booleans = ["&&", "||", "!"]
   private readonly additives = ["+", "-"]
   private readonly multiplicatives = ["*", "/"]
@@ -124,7 +125,11 @@ export class Lexer {
   }
 
   private isLogical(symbol: string): boolean {
-    return this.booleans.includes(symbol)
+    return this.logicals.includes(symbol)
+  }
+
+  private isBoolean(str: string): boolean {
+    return this.booleans.includes(str)
   }
 
   private isIdentifier(str: string): boolean {
@@ -173,7 +178,14 @@ export class Lexer {
       } else if (this.isMultiplicative(src.at())) {
         tokens.push(new Token(TokenType.MultiplicativeOperator, src.eat()))
       } else if (this.isLogical(src.at())) {
-        tokens.push(new Token(TokenType.LogicalOperator, src.eat()))
+        let bool = src.eat()
+        while (!this.isSkippable(src.at())) {
+          bool += src.eat()
+        }
+        if (!this.isBoolean(bool)) {
+          throw new Error() // TODO: throw named error
+        }
+        tokens.push(new Token(TokenType.LogicalOperator, bool))
       } else if (src.at() === "=") {
         const equals = src.eat()
         if (src.at() === ":") {
@@ -185,6 +197,8 @@ export class Lexer {
         tokens.push(new Token(TokenType.Colon, src.eat()))
       } else if (src.at() === ";") {
         tokens.push(new Token(TokenType.Semicolon, src.eat()))
+      } else {
+        throw new Error() // TODO: throw named error
       }
     }
     tokens.push(new Token(TokenType.EOF, ""))
