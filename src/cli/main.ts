@@ -1,12 +1,14 @@
 /* eslint-disable no-constant-condition */
+import { Environment } from "../domain/environment.ts"
+import { Interpreter } from "../domain/interpreter.ts"
 import { Lexer } from "../domain/lexer.ts"
 import { Parser } from "../domain/parser.ts"
 import { SourceCode } from "../domain/source-code.ts"
-import { Interpreter } from "../domain/interpreter.ts"
 
 const lexer = new Lexer()
 const parser = new Parser()
 const interpreter = new Interpreter()
+const env = new Environment()
 
 while (true) {
   const input = prompt("> ")
@@ -20,7 +22,7 @@ while (true) {
 
   const program = parser.parse(tokens)
 
-  const result = interpreter.interpret(program)
+  const result = interpreter.interpret(program, env)
 
   console.log(tokens, "\n", program, "\n", result)
 }
