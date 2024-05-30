@@ -10,8 +10,7 @@ const parser = new Parser()
 const interpreter = new Interpreter()
 const env = new Environment()
 
-const input =
-  "Начало Анализ 1.5 КонецАнализа 1: аа1 =: 10 2: аа2 =: аа1 * 2 Конец"
+const input = "Начало Анализ 1.5 КонецАнализа 1: аа1 =: 10 2: аа2 =: аа1 * 2"
 
 const src = new SourceCode(input)
 

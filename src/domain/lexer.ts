@@ -2,7 +2,8 @@
 
 import { SyntexError } from "./errors.ts"
 import { SourceCode } from "./source-code.ts"
-import { Token, TokenType, Tokens } from "./tokens.ts"
+import { Token, TokenType } from "./tokens.ts"
+import { Tokens } from "./Tokens.ts"
 export type Range<T> = [T, T]
 
 export type Keywords = { [key: string]: TokenType }

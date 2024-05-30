@@ -33,7 +33,7 @@ export class Interpreter {
     }
 
     if (last === null) {
-      throw new Error()
+      throw new Error('Программа не может быть пустой')
     }
 
     return last
@@ -52,14 +52,16 @@ export class Interpreter {
     } else if (operator === "*") {
       result = lhs.value * rhs.value
     } else if (operator === "/") {
-      // TODO: Division by zero checks
+        if (rhs.value === 0) {
+          throw new Error('Делить на ноль нельзя')
+        }
       result = lhs.value / rhs.value
     } else if (operator === "||") {
       result = lhs.value || rhs.value
     } else if (operator === "&&") {
       result = lhs.value && rhs.value
     } else {
-      throw new Error() // TODO: throw named error
+      throw new Error(`Неизвестный оператор "${operator}"`)
     } 
     
 
@@ -84,7 +86,7 @@ export class Interpreter {
   ): RuntimeValue {
     const value = this.interpret(exp.value, env)
     if (!(value instanceof NumberValue)) {
-      throw new Error() // throw named error
+      throw new Error('Не удалось преобразовать выражение в значение')
     }
     switch(exp.operator) {
       case "-":
@@ -92,7 +94,7 @@ export class Interpreter {
       case "+": 
         return new NumberValue(value.value)
       default:
-        throw new Error() // TODO: throw named error
+        throw new Error(`Неизвестный оператор "${exp.operator}"`)
     }
   }
 
@@ -118,7 +120,7 @@ export class Interpreter {
   ): RuntimeValue {
     const value = this.interpret(exp.inner, env)
     if (!(value instanceof NumberValue)) {
-      throw new Error() // TODO: throw named error
+      throw new Error('Не удалось преобразовать выражение в значение')
     }
     switch (exp.operation.value) {
       case "Синус":
@@ -128,7 +130,7 @@ export class Interpreter {
       case "Тангенс":
         return new NumberValue(Math.tan(value.value))
       default:
-        throw new Error() // TODO: throw named error
+        throw new Error(`Не известное имя функции "${exp.operation.value}"`)
     }
   }
 
@@ -148,6 +150,6 @@ export class Interpreter {
     } else if (astNode instanceof FunctionExpression) {
       return this.evaluateFunction(astNode, env)
     }
-    throw new Error() // TODO: throw custom error
+    throw new Error(`Транслятор не может обработать выражение "${astNode}"`)
   }
 }

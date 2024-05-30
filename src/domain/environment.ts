@@ -5,7 +5,7 @@ export class Environment {
 
   declare(name: string, value: RuntimeValue): RuntimeValue {
     if (this.variables.has(name)) {
-      throw new Error() // TODO: throw named error
+      throw new Error(`Переменная ${name} уже объявлена`)
     }
     this.variables.set(name, value)
     return value
@@ -19,7 +19,7 @@ export class Environment {
   lookup(name: string): RuntimeValue {
     const value = this.variables.get(name)
     if (!value) {
-      throw new Error() // TODO: throw named error
+      throw new Error(`Не удалось найти переменную "${name}"`)
     }
     return value
   }

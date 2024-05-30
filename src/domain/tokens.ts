@@ -1,3 +1,4 @@
+import { CompileError } from "./errors.ts"
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // deno-lint-ignore-file no-explicit-any
 export const enum TokenType {
@@ -46,18 +47,16 @@ export class Tokens {
     }
   }
 
-  expect(type: TokenType | TokenType[], err: any): Token {
+  expect(type: TokenType | TokenType[], errorMessage: string): Token {
     const prev = this.tokens.shift() as Token
     if (Array.isArray(type)) {
       if (!prev || !type.includes(prev.type)) {
-        throw new Error(err) // TODO: throw named error
+        throw new CompileError(errorMessage, prev)
       }
       return prev
     } else {
       if (!prev || prev.type != type) {
-        throw new Error(
-          `Ошидалось: ${type}, но встретилось ${prev.type} ${prev.value}`
-        ) // TODO: throw named error
+        throw new CompileError(errorMessage, prev)
       }
 
       return prev
