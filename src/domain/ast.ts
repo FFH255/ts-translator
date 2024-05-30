@@ -1,10 +1,13 @@
+import { Token } from "./lexer.ts"
+
 export const enum NodeType {
   Programm,
   Numeric,
   Identifier,
+  VariableDeclaration,
   BinaryExpression,
   UnaryExpression,
-  VariableDeclaration,
+  FunctionExpression,
 }
 
 export class Statement {
@@ -50,5 +53,11 @@ export class BinaryExpression extends Expression {
 export class UnaryExpression extends Expression {
   constructor(public value: Expression, public operator: string) {
     super(NodeType.UnaryExpression)
+  }
+}
+
+export class FunctionExpression extends Expression {
+  constructor(public inner: Expression, public operation: Token) {
+    super(NodeType.FunctionExpression)
   }
 }

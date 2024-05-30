@@ -20,6 +20,7 @@ export const enum TokenType {
   Semicolon,
   Allocation,
   EOF,
+  Function,
 }
 
 export class Token {
@@ -67,6 +68,9 @@ export class Lexer {
     Синтез: TokenType.StartSynthesis,
     КонецСинтеза: TokenType.EndSynthesis,
     КонецАнализа: TokenType.EndSynthesis,
+    Синус: TokenType.Function,
+    Косинус: TokenType.Function,
+    Тангенс: TokenType.Function,
   }
 
   private readonly skippables = [" ", "\n", "\t"]

@@ -2,6 +2,7 @@
 import {
   BinaryExpression,
   Expression,
+  FunctionExpression,
   IdentifierExpression,
   NumericExpression,
   Program,
@@ -9,13 +10,13 @@ import {
   UnaryExpression,
   VariableDeclarationStatement,
 } from "./ast.ts"
-import { TokenType, Tokens } from "./lexer.ts"
+import { Token, TokenType, Tokens } from "./lexer.ts"
 
 export class Parser {
   private tokens = new Tokens([])
 
   private parseStatement(): Statement {
-    return this.parseVariableDeclaration()
+    return this.parseExpression()
   }
 
   private parseVariableDeclaration(): Statement {
@@ -68,7 +69,19 @@ export class Parser {
       const value = this.parsePrimaryExpression()
       return new UnaryExpression(value, operator.value)
     }
-    return this.parsePrimaryExpression()
+    return this.parseFunctionExpression()
+  }
+
+  private parseFunctionExpression(): Expression {
+    const functions: Token[] = []
+    while (this.tokens.check(TokenType.Function)) {
+      functions.push(this.tokens.eat())
+    }
+    let inner = this.parsePrimaryExpression()
+    while (functions.length > 0) {
+      inner = new FunctionExpression(inner, functions.pop()!)
+    }
+    return inner
   }
 
   private parsePrimaryExpression(): Expression {

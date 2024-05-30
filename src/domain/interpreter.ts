@@ -1,5 +1,6 @@
 import {
   BinaryExpression,
+  FunctionExpression,
   IdentifierExpression,
   NumericExpression,
   Program,
@@ -100,6 +101,26 @@ export class Interpreter {
     return value
   }
 
+  private evaluateFunction(
+    exp: FunctionExpression,
+    env: Environment
+  ): RuntimeValue {
+    const value = this.interpret(exp.inner, env)
+    if (!(value instanceof NumberValue)) {
+      throw new Error() // TODO: throw named error
+    }
+    switch (exp.operation.value) {
+      case "Синус":
+        return new NumberValue(Math.sin(value.value))
+      case "Косинус":
+        return new NumberValue(Math.cos(value.value))
+      case "Тангенс":
+        return new NumberValue(Math.tan(value.value))
+      default:
+        throw new Error() // TODO: throw named error
+    }
+  }
+
   interpret(astNode: Statement, env: Environment): RuntimeValue {
     if (astNode instanceof NumericExpression) {
       return new NumberValue(astNode.value)
@@ -113,6 +134,8 @@ export class Interpreter {
       return this.evaluateVariable(astNode, env)
     } else if (astNode instanceof UnaryExpression) {
       return this.evaluateUnaryExpression(astNode, env)
+    } else if (astNode instanceof FunctionExpression) {
+      return this.evaluateFunction(astNode, env)
     }
     throw new Error() // TODO: throw custom error
   }

@@ -23,9 +23,9 @@ while (true) {
 
     const program = parser.parse(tokens)
 
-    interpreter.interpret(program, env)
+    const result = interpreter.interpret(program, env)
 
-    console.log(env)
+    console.log(program, result)
   } catch (e) {
     console.error(e)
   }
