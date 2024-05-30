@@ -10,23 +10,19 @@ const parser = new Parser()
 const interpreter = new Interpreter()
 const env = new Environment()
 
-while (true) {
-  const input = prompt("> ")
-  if (!input || input.includes("exit")) {
-    Deno.exit(1)
-  }
+const input =
+  "Начало Анализ 1.5 КонецАнализа 1: аа1 =: 10 2: аа2 =: аа1 * 2 Конец"
 
-  const src = new SourceCode(input)
+const src = new SourceCode(input)
 
-  try {
-    const tokens = lexer.tokenize(src)
+try {
+  const tokens = lexer.tokenize(src)
 
-    const program = parser.parse(tokens)
+  const program = parser.parse(tokens)
 
-    // interpreter.interpret(program, env)
+  interpreter.interpret(program, env)
 
-    console.log(tokens, program)
-  } catch (e) {
-    console.error(e)
-  }
+  console.log(env)
+} catch (e) {
+  console.error(e)
 }

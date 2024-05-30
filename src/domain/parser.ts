@@ -27,6 +27,21 @@ export class Parser {
     return this.parseVariableDeclaration()
   }
 
+  private parseSets() {
+    do {
+      this.parseSet()
+      this.tokens.at().type === TokenType.Semicolon
+    } while (this.tokens.safeExpect(TokenType.Semicolon))
+  }
+
+  private parseSet() {
+    this.tokens.expect([TokenType.StartAnalysis, TokenType.StartSynthesis], "")
+    do {
+      this.tokens.expect(TokenType.Float, "")
+    } while (this.tokens.check(TokenType.Float))
+    this.tokens.expect([TokenType.EndAnalysis, TokenType.EndSynthesis], "")
+  }
+
   private parseVariableDeclaration(): Statement {
     do {
       this.tokens.expect(TokenType.Int, "")
@@ -122,9 +137,17 @@ export class Parser {
     this.tokens = tokens
     const program = new Program([])
 
-    while (tokens.notEOF()) {
+    this.tokens.expect(TokenType.Begin, "")
+
+    this.parseSets()
+
+    while (!tokens.check(TokenType.End)) {
       program.boby.push(this.parseStatement())
     }
+
+    this.tokens.expect(TokenType.End, "")
+
+    this.tokens.expect(TokenType.EOF, "")
 
     return program
   }

@@ -42,13 +42,28 @@ export class Tokens {
     return this.tokens.shift() as Token
   }
 
-  expect(type: TokenType, err: any): Token {
-    const prev = this.tokens.shift() as Token
-    if (!prev || prev.type != type) {
-      throw new Error(err) // TODO: throw named error
+  safeExpect(type: TokenType): Token | undefined {
+    if (this.tokens[0].type === type) {
+      return this.tokens.shift()
     }
+  }
 
-    return prev
+  expect(type: TokenType | TokenType[], err: any): Token {
+    const prev = this.tokens.shift() as Token
+    if (Array.isArray(type)) {
+      if (!prev || !type.includes(prev.type)) {
+        throw new Error(err) // TODO: throw named error
+      }
+      return prev
+    } else {
+      if (!prev || prev.type != type) {
+        throw new Error(
+          `Ошидалось: ${type}, но встретилось ${prev.type} ${prev.value}`
+        ) // TODO: throw named error
+      }
+
+      return prev
+    }
   }
 
   check(type: TokenType): boolean {

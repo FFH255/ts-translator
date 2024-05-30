@@ -4,6 +4,7 @@ export const enum NodeType {
   Programm,
   Numeric,
   Identifier,
+  Set,
   VariableDeclaration,
   BinaryExpression,
   UnaryExpression,
