@@ -18,11 +18,15 @@ while (true) {
 
   const src = new SourceCode(input)
 
-  const tokens = lexer.tokenize(src)
+  try {
+    const tokens = lexer.tokenize(src)
 
-  const program = parser.parse(tokens)
+    const program = parser.parse(tokens)
 
-  const result = interpreter.interpret(program, env)
+    interpreter.interpret(program, env)
 
-  console.log(tokens, "\n", program, "\n", result)
+    console.log(env)
+  } catch (e) {
+    console.error(e)
+  }
 }

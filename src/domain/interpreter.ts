@@ -1,11 +1,12 @@
 import {
   BinaryExpression,
+  IdentifierExpression,
   NumericExpression,
   Program,
   Statement,
+  VariableDeclarationStatement,
 } from "./ast.ts"
 import { Environment } from "./environment.ts"
-import { IdentifierExpression } from "./ast.ts"
 
 const enum ValueType {
   Number,
@@ -77,6 +78,15 @@ export class Interpreter {
     return env.lookup(exp.value)
   }
 
+  private evaluateVariable(
+    astNode: VariableDeclarationStatement,
+    env: Environment
+  ): RuntimeValue {
+    const value = this.interpret(astNode.value, env)
+    env.declare(astNode.identifier, value)
+    return value
+  }
+
   interpret(astNode: Statement, env: Environment): RuntimeValue {
     if (astNode instanceof NumericExpression) {
       return new NumberValue(astNode.value)
@@ -86,6 +96,8 @@ export class Interpreter {
       return this.evaluateProgram(astNode, env)
     } else if (astNode instanceof IdentifierExpression) {
       return this.evaluateIdentifier(astNode, env)
+    } else if (astNode instanceof VariableDeclarationStatement) {
+      return this.evaluateVariable(astNode, env)
     }
     throw new Error() // TODO: throw custom error
   }

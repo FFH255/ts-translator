@@ -156,14 +156,14 @@ export class Lexer {
       } else if (this.isLogical(src.at())) {
         tokens.push(new Token(TokenType.LogicalOperator, src.eat()))
       } else if (src.at() === "=") {
-        tokens.push(new Token(TokenType.Equals, src.eat()))
-      } else if (src.at() === ":") {
-        const colon = src.eat()
-        if (src.at() === "=") {
-          tokens.push(new Token(TokenType.Allocation, colon + src.eat()))
+        const equals = src.eat()
+        if (src.at() === ":") {
+          tokens.push(new Token(TokenType.Allocation, equals + src.eat()))
         } else {
-          tokens.push(new Token(TokenType.Colon, colon))
+          tokens.push(new Token(TokenType.Equals, equals))
         }
+      } else if (src.at() === ":") {
+        tokens.push(new Token(TokenType.Colon, src.eat()))
       } else if (src.at() === ";") {
         tokens.push(new Token(TokenType.Semicolon, src.eat()))
       }

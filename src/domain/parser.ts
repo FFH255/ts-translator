@@ -5,6 +5,7 @@ import {
   NumericExpression,
   Program,
   Statement,
+  VariableDeclarationStatement,
 } from "./ast.ts"
 import { TokenType, Tokens } from "./lexer.ts"
 
@@ -12,7 +13,19 @@ export class Parser {
   private tokens = new Tokens([])
 
   private parseStatement(): Statement {
-    return this.parseExpression()
+    return this.parseVariableDeclaration()
+  }
+
+  private parseVariableDeclaration(): Statement {
+    if (this.tokens.at().type === TokenType.Identifier) {
+      const ident = this.tokens.eat()
+      if (this.tokens.at().type === TokenType.Allocation) {
+        this.tokens.eat()
+        const rhs = this.parseExpression()
+        return new VariableDeclarationStatement(ident.value, rhs)
+      }
+    }
+    throw new Error() // throw named error
   }
 
   private parseExpression(): Expression {
@@ -53,7 +66,7 @@ export class Parser {
       case TokenType.Float:
         return new NumericExpression(parseFloat(this.tokens.eat().value))
       default:
-        throw new Error("Неизвестный токен")
+        throw new Error(`Неизвестный токен ${token.type} ${token.value}`)
     }
   }
 

@@ -3,10 +3,17 @@ export const enum NodeType {
   Numeric,
   Identifier,
   BinaryExpression,
+  VariableDeclaration,
 }
 
 export class Statement {
   constructor(public kind: NodeType) {}
+}
+
+export class VariableDeclarationStatement extends Statement {
+  constructor(public identifier: string, public value: Expression) {
+    super(NodeType.VariableDeclaration)
+  }
 }
 
 export class Program extends Statement {
