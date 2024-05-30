@@ -21,13 +21,11 @@ while (true) {
   try {
     const tokens = lexer.tokenize(src)
 
-    console.log(tokens)
+    const program = parser.parse(tokens)
 
-    // const program = parser.parse(tokens)
+    interpreter.interpret(program, env)
 
-    // const result = interpreter.interpret(program, env)
-
-    // console.log(program, result)
+    console.log(env)
   } catch (e) {
     console.error(e)
   }

@@ -16,7 +16,7 @@ export class Parser {
   private tokens = new Tokens([])
 
   private parseStatement(): Statement {
-    return this.parseExpression()
+    return this.parseVariableDeclaration()
   }
 
   private parseVariableDeclaration(): Statement {
@@ -40,9 +40,21 @@ export class Parser {
   }
 
   private parseAddiviteExpression(): Expression {
-    let left = this.parseMultiplicativeExpression()
+    let left = this.parseLogicalExpression()
 
     while (this.tokens.at().type === TokenType.AdditiveOperator) {
+      const operation = this.tokens.eat().value
+      const right = this.parseMultiplicativeExpression()
+      left = new BinaryExpression(left, right, operation)
+    }
+
+    return left
+  }
+
+  private parseLogicalExpression(): Expression {
+    let left = this.parseMultiplicativeExpression()
+
+    while (this.tokens.at().type === TokenType.LogicalOperator) {
       const operation = this.tokens.eat().value
       const right = this.parseMultiplicativeExpression()
       left = new BinaryExpression(left, right, operation)

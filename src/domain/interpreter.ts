@@ -45,18 +45,23 @@ export class Interpreter {
     operator: string
   ): NumberValue {
     let result: number
-    if (operator == "+") {
+    if (operator === "+") {
       result = lhs.value + rhs.value
-    } else if (operator == "-") {
+    } else if (operator === "-") {
       result = lhs.value - rhs.value
-    } else if (operator == "*") {
+    } else if (operator === "*") {
       result = lhs.value * rhs.value
-    } else if (operator == "/") {
+    } else if (operator === "/") {
       // TODO: Division by zero checks
       result = lhs.value / rhs.value
+    } else if (operator === "||") {
+      result = lhs.value || rhs.value
+    } else if (operator === "&&") {
+      result = lhs.value && rhs.value
     } else {
-      result = lhs.value % rhs.value
-    }
+      throw new Error() // TODO: throw named error
+    } 
+    
 
     return new NumberValue(result)
   }
@@ -81,8 +86,14 @@ export class Interpreter {
     if (!(value instanceof NumberValue)) {
       throw new Error() // throw named error
     }
-    const operator = exp.operator === "-" ? -1 : 1
-    return new NumberValue(operator * value.value)
+    switch(exp.operator) {
+      case "-":
+        return new NumberValue(-1 * value.value)
+      case "+": 
+        return new NumberValue(value.value)
+      default:
+        throw new Error() // TODO: throw named error
+    }
   }
 
   private evaluateIdentifier(
