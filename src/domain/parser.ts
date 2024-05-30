@@ -1,4 +1,12 @@
 /* eslint-disable no-empty */
+
+// 1. Функции
+// 2. Отрицание
+// 3. Мультипликатив
+// 4. Адитив
+// 5. And
+// 6. Or
+
 import {
   BinaryExpression,
   Expression,
@@ -20,11 +28,11 @@ export class Parser {
   }
 
   private parseVariableDeclaration(): Statement {
-    // do {
-    //   this.tokens.expect(TokenType.Int, "")
-    // } while (this.tokens.at().type === TokenType.Int)
+    do {
+      this.tokens.expect(TokenType.Int, "")
+    } while (this.tokens.at().type === TokenType.Int)
 
-    // this.tokens.expect(TokenType.Colon, "")
+    this.tokens.expect(TokenType.Colon, "")
 
     const ident = this.tokens.expect(TokenType.Identifier, "")
 
@@ -36,25 +44,25 @@ export class Parser {
   }
 
   private parseExpression(): Expression {
-    return this.parseAddiviteExpression()
+    return this.parseLogicalExpression()
   }
 
-  private parseAddiviteExpression(): Expression {
-    let left = this.parseLogicalExpression()
+  private parseLogicalExpression(): Expression {
+    let left = this.parseAddiviteExpression()
 
-    while (this.tokens.at().type === TokenType.AdditiveOperator) {
+    while (this.tokens.at().type === TokenType.LogicalOperator) {
       const operation = this.tokens.eat().value
-      const right = this.parseMultiplicativeExpression()
+      const right = this.parseAddiviteExpression()
       left = new BinaryExpression(left, right, operation)
     }
 
     return left
   }
 
-  private parseLogicalExpression(): Expression {
+  private parseAddiviteExpression(): Expression {
     let left = this.parseMultiplicativeExpression()
 
-    while (this.tokens.at().type === TokenType.LogicalOperator) {
+    while (this.tokens.at().type === TokenType.AdditiveOperator) {
       const operation = this.tokens.eat().value
       const right = this.parseMultiplicativeExpression()
       left = new BinaryExpression(left, right, operation)
@@ -78,7 +86,7 @@ export class Parser {
   private parseUnaryExpression(): Expression {
     if (this.tokens.check(TokenType.AdditiveOperator)) {
       const operator = this.tokens.eat()
-      const value = this.parsePrimaryExpression()
+      const value = this.parseFunctionExpression()
       return new UnaryExpression(value, operator.value)
     }
     return this.parseFunctionExpression()

@@ -85,8 +85,8 @@ export class Lexer {
     "9".charCodeAt(0),
   ]
 
-  private readonly logicals = ["&", "|", "!"]
-  private readonly booleans = ["&&", "||", "!"]
+  private readonly logicals = ["&", "|"]
+  private readonly booleans = ["&&", "||"]
   private readonly additives = ["+", "-"]
   private readonly multiplicatives = ["*", "/"]
 
