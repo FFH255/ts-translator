@@ -1,4 +1,4 @@
-import { Token } from "./lexer.ts"
+import { Token } from "./tokens.ts"
 
 export const enum NodeType {
   Programm,

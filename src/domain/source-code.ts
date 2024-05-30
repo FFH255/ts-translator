@@ -1,8 +1,10 @@
 export class SourceCode {
   private readonly symbols: string[]
+  private readonly length: number
 
   constructor(input: string) {
     this.symbols = input.split("")
+    this.length = input.length
   }
 
   notEOF(): boolean {
@@ -15,5 +17,9 @@ export class SourceCode {
 
   eat(): string {
     return this.symbols.shift() || ""
+  }
+
+  position(): number {
+    return this.length - this.symbols.length
   }
 }

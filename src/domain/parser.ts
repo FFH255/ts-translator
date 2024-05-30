@@ -18,7 +18,7 @@ import {
   UnaryExpression,
   VariableDeclarationStatement,
 } from "./ast.ts"
-import { Token, TokenType, Tokens } from "./lexer.ts"
+import { Token, TokenType, Tokens } from "./tokens.ts"
 
 export class Parser {
   private tokens = new Tokens([])
