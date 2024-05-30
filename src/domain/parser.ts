@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 import {
   BinaryExpression,
   Expression,
@@ -5,6 +6,7 @@ import {
   NumericExpression,
   Program,
   Statement,
+  UnaryExpression,
   VariableDeclarationStatement,
 } from "./ast.ts"
 import { TokenType, Tokens } from "./lexer.ts"
@@ -17,15 +19,19 @@ export class Parser {
   }
 
   private parseVariableDeclaration(): Statement {
-    if (this.tokens.at().type === TokenType.Identifier) {
-      const ident = this.tokens.eat()
-      if (this.tokens.at().type === TokenType.Allocation) {
-        this.tokens.eat()
-        const rhs = this.parseExpression()
-        return new VariableDeclarationStatement(ident.value, rhs)
-      }
-    }
-    throw new Error() // throw named error
+    // do {
+    //   this.tokens.expect(TokenType.Int, "")
+    // } while (this.tokens.at().type === TokenType.Int)
+
+    // this.tokens.expect(TokenType.Colon, "")
+
+    const ident = this.tokens.expect(TokenType.Identifier, "")
+
+    this.tokens.expect(TokenType.Allocation, "")
+
+    const rhs = this.parseExpression()
+
+    return new VariableDeclarationStatement(ident.value, rhs)
   }
 
   private parseExpression(): Expression {
@@ -45,15 +51,24 @@ export class Parser {
   }
 
   private parseMultiplicativeExpression(): Expression {
-    let left = this.parsePrimaryExpression()
+    let left = this.parseUnaryExpression()
 
     while (this.tokens.at().type === TokenType.MultiplicativeOperator) {
       const operation = this.tokens.eat().value
-      const right = this.parsePrimaryExpression()
+      const right = this.parseUnaryExpression()
       left = new BinaryExpression(left, right, operation)
     }
 
     return left
+  }
+
+  private parseUnaryExpression(): Expression {
+    if (this.tokens.check(TokenType.AdditiveOperator)) {
+      const operator = this.tokens.eat()
+      const value = this.parsePrimaryExpression()
+      return new UnaryExpression(value, operator.value)
+    }
+    return this.parsePrimaryExpression()
   }
 
   private parsePrimaryExpression(): Expression {

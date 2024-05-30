@@ -3,6 +3,7 @@ export const enum NodeType {
   Numeric,
   Identifier,
   BinaryExpression,
+  UnaryExpression,
   VariableDeclaration,
 }
 
@@ -43,5 +44,11 @@ export class BinaryExpression extends Expression {
     public operator: string
   ) {
     super(NodeType.BinaryExpression)
+  }
+}
+
+export class UnaryExpression extends Expression {
+  constructor(public value: Expression, public operator: string) {
+    super(NodeType.UnaryExpression)
   }
 }

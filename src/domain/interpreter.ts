@@ -4,6 +4,7 @@ import {
   NumericExpression,
   Program,
   Statement,
+  UnaryExpression,
   VariableDeclarationStatement,
 } from "./ast.ts"
 import { Environment } from "./environment.ts"
@@ -71,6 +72,18 @@ export class Interpreter {
     throw new Error()
   }
 
+  private evaluateUnaryExpression(
+    exp: UnaryExpression,
+    env: Environment
+  ): RuntimeValue {
+    const value = this.interpret(exp.value, env)
+    if (!(value instanceof NumberValue)) {
+      throw new Error() // throw named error
+    }
+    const operator = exp.operator === "-" ? -1 : 1
+    return new NumberValue(operator * value.value)
+  }
+
   private evaluateIdentifier(
     exp: IdentifierExpression,
     env: Environment
@@ -98,6 +111,8 @@ export class Interpreter {
       return this.evaluateIdentifier(astNode, env)
     } else if (astNode instanceof VariableDeclarationStatement) {
       return this.evaluateVariable(astNode, env)
+    } else if (astNode instanceof UnaryExpression) {
+      return this.evaluateUnaryExpression(astNode, env)
     }
     throw new Error() // TODO: throw custom error
   }

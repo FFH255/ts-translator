@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// deno-lint-ignore-file no-explicit-any
 import { SourceCode } from "./source-code.ts"
 
 export const enum TokenType {
@@ -37,6 +39,19 @@ export class Tokens {
 
   eat(): Token {
     return this.tokens.shift() as Token
+  }
+
+  expect(type: TokenType, err: any): Token {
+    const prev = this.tokens.shift() as Token
+    if (!prev || prev.type != type) {
+      throw new Error(err) // TODO: throw named error
+    }
+
+    return prev
+  }
+
+  check(type: TokenType): boolean {
+    return this.tokens[0].type === type
   }
 }
 
