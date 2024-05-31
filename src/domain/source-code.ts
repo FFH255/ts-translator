@@ -22,4 +22,8 @@ export class SourceCode {
   position(): number {
     return this.length - this.symbols.length
   }
+
+  check(str: string): boolean {
+    return str.split("").every((char, i) => char === this.symbols[i])
+  }
 }

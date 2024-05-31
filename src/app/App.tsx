@@ -54,6 +54,7 @@ function App() {
   }
 
   const execute = () => {
+    removeHighlighting()
     const input = ref.current?.innerHTML
     if (!input) {
       return
@@ -61,7 +62,6 @@ function App() {
     const translator = new Translator()
     try {
       console.log(input)
-      removeHighlighting()
       const env = translator.translate(input)
       console.log(env)
       setVars(env)

@@ -13,8 +13,6 @@ export class Lexer {
     Конец: TokenType.End,
     Анализ: TokenType.StartAnalysis,
     Синтез: TokenType.StartSynthesis,
-    КонецСинтеза: TokenType.EndSynthesis,
-    КонецАнализа: TokenType.EndSynthesis,
     Синус: TokenType.Function,
     Косинус: TokenType.Function,
     Тангенс: TokenType.Function,
@@ -102,14 +100,44 @@ export class Lexer {
           ident += src.eat()
         }
         if (this.isKeyword(ident)) {
-          tokens.push(
-            new Token(
-              this.keywords[ident],
-              ident,
-              src.position() - ident.length,
-              src.position()
+          if (ident === "Конец" && src.check(" Анализа")) {
+            src.eat()
+            let part = " "
+            while (this.isAlphabetical(src.at())) {
+              part += src.eat()
+            }
+            tokens.push(
+              new Token(
+                TokenType.EndAnalysis,
+                ident + part,
+                src.position() - ident.length - part.length,
+                src.position()
+              )
             )
-          )
+          } else if (ident === "Конец" && src.check(" Синтеза")) {
+            src.eat()
+            let part = " "
+            while (this.isAlphabetical(src.at())) {
+              part += src.eat()
+            }
+            tokens.push(
+              new Token(
+                TokenType.EndSynthesis,
+                ident + part,
+                src.position() - ident.length - part.length,
+                src.position()
+              )
+            )
+          } else {
+            tokens.push(
+              new Token(
+                this.keywords[ident],
+                ident,
+                src.position() - ident.length,
+                src.position()
+              )
+            )
+          }
         } else if (this.isIdentifier(ident)) {
           tokens.push(
             new Token(
