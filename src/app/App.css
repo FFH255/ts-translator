@@ -14,3 +14,30 @@
   min-height: 25rem;
 }
 
+.program {
+  position: relative;
+}
+
+.key-logger {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  z-index: 1;
+}
+
+.display {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.sub {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}

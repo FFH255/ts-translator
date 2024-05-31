@@ -19,7 +19,7 @@
 }
 
 .form__item {
-  font-size: .9rem;
+  font-size: 1rem;
 }
 
 .form__item_direction_col {
@@ -36,7 +36,7 @@
 
 .input {
   padding: 1.2rem 1.2rem;
-  font-size: .9rem;
+  font-size: 1rem;
   line-height: 1;
 }
 
@@ -47,7 +47,7 @@
 
 .textarea {
   padding: 1.2rem 1.2rem;
-  font-size: .9rem;
+  font-size: 1rem;
   line-height: 1;
 }
 
@@ -59,7 +59,6 @@
 
 .form-error-message {
   color: var(--danger);
-  font-size: .9rem;
+  font-size: 1rem;
   text-align: center;
-  margin-top: .6rem;
 }

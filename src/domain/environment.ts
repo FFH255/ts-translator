@@ -23,4 +23,8 @@ export class Environment {
     }
     return value
   }
+
+  getVars(): Map<string, RuntimeValue> {
+    return this.variables
+  }
 }
