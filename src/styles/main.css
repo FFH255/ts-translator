@@ -1,0 +1,61 @@
+@import url('./header.css');
+@import url('./button.css');
+@import url('./form.css');
+@import url('./list.css');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+:root {
+  --main: #010103;
+  --background-1000: #ffffff;
+  --background-500: #ececee;
+  --background-250: #f4f4f5;
+  --contrast: #006ff0;
+  --positive: #4bb24e;
+  --danger: #d13535;
+}
+
+html {
+  line-height: 1.5;
+  background-color: var(--background-1000);
+  font-family:  Arial, sans-serif;
+  color: var(--main);
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+  
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button, input, textarea, select {
+	background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	outline: inherit;
+}
+
+._border_main {
+  border: 1px solid var(--main);
+  border-radius: 6px;
+}
+
+._border_sub {
+  border: 1px solid var(--background-500);
+  border-radius: 6px;
+}
+
+.placeholder {
+  margin-top: 3rem;
+  text-align: center;
+}

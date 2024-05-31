@@ -1,0 +1,25 @@
+.list {
+  display: grid;
+  gap: 1rem;
+}
+
+.item {
+  display: grid;
+  gap: .3rem;
+  padding: 1.5rem;
+}
+
+.item_hoverable:hover {
+  cursor: pointer;
+  border-color: var(--main);
+}
+
+.item__title {
+  color: var(--contrast);
+}
+
+.item__buttons {
+  display: flex;
+  gap: .4rem;
+  margin-block: .3rem;
+}
