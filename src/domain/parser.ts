@@ -172,7 +172,7 @@ export class Parser {
 
     this.parseSets()
 
-    while (!tokens.check(TokenType.End)) {
+    while (!tokens.check(TokenType.End) && tokens.notEOF()) {
       program.boby.push(this.parseStatement())
     }
 

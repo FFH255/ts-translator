@@ -2,8 +2,7 @@
 
 import { SyntexError } from "./errors.ts"
 import { SourceCode } from "./source-code.ts"
-import { Token, TokenType } from "./tokens.ts"
-import { Tokens } from "./Tokens.ts"
+import { Token, TokenType, Tokens } from "./tokens.ts"
 export type Range<T> = [T, T]
 
 export type Keywords = { [key: string]: TokenType }
@@ -103,9 +102,23 @@ export class Lexer {
           ident += src.eat()
         }
         if (this.isKeyword(ident)) {
-          tokens.push(new Token(this.keywords[ident], ident))
+          tokens.push(
+            new Token(
+              this.keywords[ident],
+              ident,
+              src.position() - ident.length,
+              src.position() - 1
+            )
+          )
         } else if (this.isIdentifier(ident)) {
-          tokens.push(new Token(TokenType.Identifier, ident))
+          tokens.push(
+            new Token(
+              TokenType.Identifier,
+              ident,
+              src.position() - ident.length,
+              src.position() - 1
+            )
+          )
         } else {
           throw new SyntexError(
             `Неизвестная последовательность символов "${ident}"`,
@@ -119,9 +132,23 @@ export class Lexer {
           num += src.eat()
         }
         if (this.isInt(num)) {
-          tokens.push(new Token(TokenType.Int, num))
+          tokens.push(
+            new Token(
+              TokenType.Int,
+              num,
+              src.position() - num.length,
+              src.position() - 1
+            )
+          )
         } else if (this.isFloat(num)) {
-          tokens.push(new Token(TokenType.Float, num))
+          tokens.push(
+            new Token(
+              TokenType.Float,
+              num,
+              src.position() - num.length,
+              src.position() - 1
+            )
+          )
         } else {
           throw new SyntexError(
             `Неправильная запись числа "${num}"`,
@@ -130,9 +157,23 @@ export class Lexer {
           )
         }
       } else if (this.isAdditive(src.at())) {
-        tokens.push(new Token(TokenType.AdditiveOperator, src.eat()))
+        tokens.push(
+          new Token(
+            TokenType.AdditiveOperator,
+            src.eat(),
+            src.position() - 2,
+            src.position() - 1
+          )
+        )
       } else if (this.isMultiplicative(src.at())) {
-        tokens.push(new Token(TokenType.MultiplicativeOperator, src.eat()))
+        tokens.push(
+          new Token(
+            TokenType.MultiplicativeOperator,
+            src.eat(),
+            src.position() - 2,
+            src.position() - 1
+          )
+        )
       } else if (this.isLogical(src.at())) {
         let bool = src.eat()
         while (!this.isSkippable(src.at()) && src.notEOF()) {
@@ -145,18 +186,53 @@ export class Lexer {
             src.position() - 1
           )
         }
-        tokens.push(new Token(TokenType.LogicalOperator, bool))
+        tokens.push(
+          new Token(
+            TokenType.LogicalOperator,
+            bool,
+            src.position() - bool.length,
+            src.position() - 1
+          )
+        )
       } else if (src.at() === "=") {
         const equals = src.eat()
         if (src.at() === ":") {
-          tokens.push(new Token(TokenType.Allocation, equals + src.eat()))
+          tokens.push(
+            new Token(
+              TokenType.Allocation,
+              equals + src.eat(),
+              src.position() - 3,
+              src.position() - 1
+            )
+          )
         } else {
-          tokens.push(new Token(TokenType.Equals, equals))
+          tokens.push(
+            new Token(
+              TokenType.Equals,
+              equals,
+              src.position() - 2,
+              src.position() - 1
+            )
+          )
         }
       } else if (src.at() === ":") {
-        tokens.push(new Token(TokenType.Colon, src.eat()))
+        tokens.push(
+          new Token(
+            TokenType.Colon,
+            src.eat(),
+            src.position() - 2,
+            src.position() - 1
+          )
+        )
       } else if (src.at() === ";") {
-        tokens.push(new Token(TokenType.Semicolon, src.eat()))
+        tokens.push(
+          new Token(
+            TokenType.Semicolon,
+            src.eat(),
+            src.position() - 2,
+            src.position() - 1
+          )
+        )
       } else {
         throw new SyntexError(
           `Неизвестный символ "${src.at()}"`,
@@ -165,7 +241,7 @@ export class Lexer {
         )
       }
     }
-    tokens.push(new Token(TokenType.EOF, ""))
+    tokens.push(new Token(TokenType.EOF, "", -1, -1))
     return new Tokens(tokens)
   }
 }

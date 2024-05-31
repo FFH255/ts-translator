@@ -22,8 +22,19 @@ export const enum TokenType {
   Function,
 }
 
-export class Token {
-  constructor(public type: TokenType, public value: string) {}
+export class Position {
+  constructor(public from: number, public to: number) {}
+}
+
+export class Token extends Position {
+  constructor(
+    public type: TokenType,
+    public value: string,
+    from: number,
+    to: number
+  ) {
+    super(from, to)
+  }
 }
 
 export class Tokens {
