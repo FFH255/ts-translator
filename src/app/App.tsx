@@ -27,6 +27,17 @@ function App() {
 
   const [vars, setVars] = useState(new Array<Variable>())
 
+  const removeHighlighting = () => {
+    const div = ref.current
+    if (!div) {
+      return
+    }
+    const input = div.innerHTML
+      .replace(/<mark style="background: red;">/g, "")
+      .replace(/<\/mark>/g, "")
+    div.innerHTML = input
+  }
+
   const highlightText = (from: number, to: number) => {
     const div = ref.current
     if (!div) {
@@ -36,19 +47,21 @@ function App() {
     const selectedText = div.innerHTML.substring(from, to)
     const textAfterSelection = div.innerHTML.substring(to)
 
-    const highlightedText = `<mark>${selectedText}</mark>`
+    const highlightedText = `<mark style="background: red;">${selectedText}</mark>`
     const newText = textBeforeSelection + highlightedText + textAfterSelection
 
     div.innerHTML = newText
   }
 
   const execute = () => {
-    const input = ref.current?.innerText
+    const input = ref.current?.innerHTML
     if (!input) {
       return
     }
     const translator = new Translator()
     try {
+      console.log(input)
+      removeHighlighting()
       const env = translator.translate(input)
       console.log(env)
       setVars(env)
@@ -63,6 +76,8 @@ function App() {
         setError(e.message)
         setVars([])
         highlightText(e.token.from, e.token.to)
+      } else if (e instanceof Error) {
+        setError(e.message)
       }
       console.error(e)
     }
@@ -102,7 +117,7 @@ function App() {
       <div className="list item _border_main">
         <div className="item__title">Результат</div>
         {vars.map((variable) => (
-          <span>
+          <span key={variable.name}>
             {variable.name} = {variable.value}
           </span>
         ))}

@@ -107,7 +107,7 @@ export class Lexer {
               this.keywords[ident],
               ident,
               src.position() - ident.length,
-              src.position() - 1
+              src.position()
             )
           )
         } else if (this.isIdentifier(ident)) {
@@ -116,14 +116,14 @@ export class Lexer {
               TokenType.Identifier,
               ident,
               src.position() - ident.length,
-              src.position() - 1
+              src.position()
             )
           )
         } else {
           throw new SyntexError(
             `Неизвестная последовательность символов "${ident}"`,
             src.position() - ident.length,
-            src.position() - 1
+            src.position()
           )
         }
       } else if (this.isNumeric(src.at())) {
@@ -137,7 +137,7 @@ export class Lexer {
               TokenType.Int,
               num,
               src.position() - num.length,
-              src.position() - 1
+              src.position()
             )
           )
         } else if (this.isFloat(num)) {
@@ -146,14 +146,14 @@ export class Lexer {
               TokenType.Float,
               num,
               src.position() - num.length,
-              src.position() - 1
+              src.position()
             )
           )
         } else {
           throw new SyntexError(
             `Неправильная запись числа "${num}"`,
             src.position() - num.length,
-            src.position() - 1
+            src.position()
           )
         }
       } else if (this.isAdditive(src.at())) {
@@ -162,7 +162,7 @@ export class Lexer {
             TokenType.AdditiveOperator,
             src.eat(),
             src.position() - 2,
-            src.position() - 1
+            src.position()
           )
         )
       } else if (this.isMultiplicative(src.at())) {
@@ -171,7 +171,7 @@ export class Lexer {
             TokenType.MultiplicativeOperator,
             src.eat(),
             src.position() - 2,
-            src.position() - 1
+            src.position()
           )
         )
       } else if (this.isLogical(src.at())) {
@@ -183,7 +183,7 @@ export class Lexer {
           throw new SyntexError(
             `Неизвестный логический символ "${bool}"`,
             src.position() - bool.length,
-            src.position() - 1
+            src.position()
           )
         }
         tokens.push(
@@ -191,7 +191,7 @@ export class Lexer {
             TokenType.LogicalOperator,
             bool,
             src.position() - bool.length,
-            src.position() - 1
+            src.position()
           )
         )
       } else if (src.at() === "=") {
@@ -202,7 +202,7 @@ export class Lexer {
               TokenType.Allocation,
               equals + src.eat(),
               src.position() - 3,
-              src.position() - 1
+              src.position()
             )
           )
         } else {
@@ -211,7 +211,7 @@ export class Lexer {
               TokenType.Equals,
               equals,
               src.position() - 2,
-              src.position() - 1
+              src.position()
             )
           )
         }
@@ -221,7 +221,7 @@ export class Lexer {
             TokenType.Colon,
             src.eat(),
             src.position() - 2,
-            src.position() - 1
+            src.position()
           )
         )
       } else if (src.at() === ";") {
@@ -230,14 +230,20 @@ export class Lexer {
             TokenType.Semicolon,
             src.eat(),
             src.position() - 2,
-            src.position() - 1
+            src.position()
           )
         )
+      } else if (src.at() === "<") {
+        src.eat()
+        while (src.at() !== ">" && src.notEOF()) {
+          src.eat()
+        }
+        src.eat()
       } else {
         throw new SyntexError(
           `Неизвестный символ "${src.at()}"`,
           src.position(),
-          src.position()
+          src.position() + 1
         )
       }
     }
